@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PropertyRental.Models
+namespace csharp_PropertyRental.Models
 {
     public class Lease
     {
@@ -21,14 +21,12 @@ namespace PropertyRental.Models
         [Required]
         public DateTime EndDate { get; set; } // End date
 
-        public string Terms { get; set; } // Terms
+        public string? Terms { get; set; } // Terms
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Date created
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; // Last updated
 
         // Navigation Properties
-        public Property Property { get; set; } // Many-to-One: Lease -> Property
-        public Landlord Landlord { get; set; } // Many-to-One: Lease -> Landlord
-        public ICollection<LeaseTenant> LeaseTenants { get; set; } // Many-to-Many: Lease -> Tenants
+        public ICollection<Tenant>? Tenants { get; set; } // One-to-Many: Landlord -> 
     }
 }

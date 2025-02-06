@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PropertyRental.Models
+namespace csharp_PropertyRental.Models
 {
     public class Landlord
     {

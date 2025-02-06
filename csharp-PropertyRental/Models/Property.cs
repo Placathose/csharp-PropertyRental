@@ -1,45 +1,44 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PropertyRental.Models
+namespace csharp_PropertyRental.Models
 {
     public class Property
     {
         [Key]
-        public int PropertyId { get; set; } // Primary Key
+        public int PropertyId { get; set; }
 
         [Required]
-        public int LandlordId { get; set; } // Foreign Key to Landlord
+        public int LandlordId { get; set; }
 
         [Required]
-        public string? Title { get; set; } // Title
+        public string? Title { get; set; }
 
-        public string? Description { get; set; } // Description
-
-        [Required]
-        public decimal Price { get; set; } // Price
+        public string? Description { get; set; }
 
         [Required]
-        public string? Location { get; set; } // Location
+        public decimal Price { get; set; }
 
         [Required]
-        public string? PropertyType { get; set; } // Property type
+        public string? Location { get; set; }
 
         [Required]
-        public int Bedrooms { get; set; } // Bedrooms
+        public string? PropertyType { get; set; }
 
         [Required]
-        public int Bathrooms { get; set; } // Bathrooms
+        public int Bedrooms { get; set; }
 
-        public int SquareFootage { get; set; } // Square footage
+        [Required]
+        public int Bathrooms { get; set; }
 
-        public bool IsAvailable { get; set; } = true; // Availability
+        public int SquareFootage { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Date added
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; // Last updated
+        public bool IsAvailable { get; set; } = true;
 
-        // Navigation Properties
-        public Landlord? Landlord { get; set; } // Many-to-One: Property -> Landlord
-        public ICollection<Lease>? Leases { get; set; } // One-to-Many: Property -> Leases
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public Landlord? Landlord { get; set; }
+        public ICollection<Lease>? Leases { get; set; }
     }
 }
