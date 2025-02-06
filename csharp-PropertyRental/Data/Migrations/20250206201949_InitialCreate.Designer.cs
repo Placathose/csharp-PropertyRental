@@ -11,8 +11,8 @@ using csharp_PropertyRental.Data;
 namespace csharp_PropertyRental.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250206045910_Lease")]
-    partial class Lease
+    [Migration("20250206201949_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,184 @@ namespace csharp_PropertyRental.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("csharp_PropertyRental.Models.Landlord", b =>
+                {
+                    b.Property<int>("LandlordId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LandlordId");
+
+                    b.ToTable("Landlords");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Lease", b =>
+                {
+                    b.Property<int>("LeaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LandlordId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Terms")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LeaseId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.ToTable("Leases");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.LeaseTenant", b =>
+                {
+                    b.Property<int>("LeaseTenantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LeaseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("LeaseTenantId");
+
+                    b.HasIndex("LeaseId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("LeaseTenants");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Property", b =>
+                {
+                    b.Property<int>("PropertyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Bathrooms")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Bedrooms")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LandlordId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PropertyType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("SquareFootage")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("PropertyId");
+
+                    b.HasIndex("LandlordId");
+
+                    b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Tenant", b =>
+                {
+                    b.Property<int>("TenantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("LeaseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("TenantId");
+
+                    b.HasIndex("LeaseId");
+
+                    b.ToTable("Tenants");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -265,6 +443,72 @@ namespace csharp_PropertyRental.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Lease", b =>
+                {
+                    b.HasOne("csharp_PropertyRental.Models.Property", null)
+                        .WithMany("Leases")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.LeaseTenant", b =>
+                {
+                    b.HasOne("csharp_PropertyRental.Models.Lease", "Lease")
+                        .WithMany()
+                        .HasForeignKey("LeaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("csharp_PropertyRental.Models.Tenant", "Tenant")
+                        .WithMany("LeaseTenants")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lease");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Property", b =>
+                {
+                    b.HasOne("csharp_PropertyRental.Models.Landlord", "Landlord")
+                        .WithMany("Properties")
+                        .HasForeignKey("LandlordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Landlord");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Tenant", b =>
+                {
+                    b.HasOne("csharp_PropertyRental.Models.Lease", null)
+                        .WithMany("Tenants")
+                        .HasForeignKey("LeaseId");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Landlord", b =>
+                {
+                    b.Navigation("Properties");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Lease", b =>
+                {
+                    b.Navigation("Tenants");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Property", b =>
+                {
+                    b.Navigation("Leases");
+                });
+
+            modelBuilder.Entity("csharp_PropertyRental.Models.Tenant", b =>
+                {
+                    b.Navigation("LeaseTenants");
                 });
 #pragma warning restore 612, 618
         }

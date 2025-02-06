@@ -1,32 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using csharp_PropertyRental.Models;
+using csharp_PropertyRental.Data;
 
 namespace csharp_PropertyRental.Controllers
 {
-    [Route("[controller]")]
+    [ApiController]
+    [Route("[controller]")] // Route: /Landlord
     public class LandlordController : Controller
     {
-        private readonly ILogger<LandlordController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public LandlordController(ILogger<LandlordController> logger)
+        public LandlordController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // POST route to handle adding a landlord
+        [HttpPost("AddLandlord")] // Route: /Landlord/AddLandlord
+        public IActionResult AddLandlord([FromBody] Landlord landlord)
         {
-            return View();
+            if (!ModelState.IsValid) // Validate the model
+            {
+                return BadRequest(ModelState); // Return 400 if validation fails
+            }
+
+            _context.Landlords.Add(landlord); // Add the landlord to the database
+            _context.SaveChanges(); // Save changes
+
+            return Ok(landlord); // Return 200 with the created landlord
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // GET route to retrieve all landlords
+        [HttpGet("GetAllLandlords")] 
+        public IActionResult GetAllLandlords()
         {
-            return View("Error!");
+            // Retrieve all landlords from the database
+            var landlords = _context.Landlords.ToList(); 
+            return Ok(landlords); 
         }
     }
 }
