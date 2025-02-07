@@ -38,5 +38,47 @@ namespace csharp_PropertyRental.Controllers
             var landlords = _context.Landlords.ToList(); 
             return Ok(landlords); 
         }
+
+        // DELETE a Landlord by ID
+        [HttpDelete("DeleteLandlord/{id}")]
+        public IActionResult DeleteALandlord(int id)
+        {
+            var landlord = _context.Landlords.Find(id);
+            if(landlord == null)
+            {
+                return NotFound();
+            }
+
+            _context.Landlords.Remove(landlord);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPut("UpdateLandlord/{id}")]
+        public IActionResult UpdateLandlord(int id, [FromBody] Landlord updatedLandlord)
+        {
+            var landlord = _context.Landlords.Find(id);
+            if(landlord == null)
+            {
+                return NotFound();
+            }
+
+            // Update landlord fields
+            landlord.FirstName = updatedLandlord.FirstName;
+            landlord.LastName = updatedLandlord.LastName;
+            landlord.Email = updatedLandlord.Email;
+            landlord.Phone = updatedLandlord.Phone;
+            landlord.UpdatedAt = DateTime.UtcNow;
+
+            _context.Landlords.Update(landlord);
+
+            // save it in db
+            _context.SaveChanges();
+
+            // Return 200 with updated landlord JSON
+            return Ok(landlord);
+
+        }
     }
 }
