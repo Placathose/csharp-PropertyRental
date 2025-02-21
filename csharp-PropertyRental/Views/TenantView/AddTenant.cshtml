@@ -1,0 +1,34 @@
+@model csharp_PropertyRental.Models.TenantViewModel
+
+@{
+    ViewData["Title"] = "Add Tenant";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="TenantFirstName">First Name</label>
+        <input type="text" class="form-control" id="TenantFirstName" name="TenantFirstName" value="@Model.TenantFirstName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="TenantLastName">Last Name</label>
+        <input type="text" class="form-control" id="TenantLastName" name="TenantLastName" value="@Model.TenantLastName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Phone">Phone</label>
+        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.Phone" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Tenant</button>
+</form>
+
+<a href="@Url.Action("Index", "TenantView")" class="btn btn-secondary">Back to List</a>

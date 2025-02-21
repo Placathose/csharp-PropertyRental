@@ -1,10 +1,10 @@
-@model List<csharp_PropertyRental.Models.LandlordViewModel>
+@model List<csharp_PropertyRental.Models.TenantViewModel>
 
 @{
-    ViewData["Title"] = "Landlords List";
+    ViewData["Title"] = "Tenants List";
 }
 
-<h2>Landlords</h2>
+<h2>Tenants</h2>
 
 <table class="table">
     <thead>
@@ -13,28 +13,29 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var landlord in Model)
+        @foreach (var tenant in Model)
         {
             <tr>
-                <td>@landlord.LandlordFirstName</td>
-                <td>@landlord.LandlordLastName</td>
-                <td>@landlord.Email</td>
-                <td>@landlord.Phone</td>
-                 <td>
-                    <!-- navigate to Landlord/EditLandlord/id-->
-                    <a href="@Url.Action("EditLandlord", "LandlordView", new { id = landlord.LandlordId })" class="btn btn-warning">
+                <td>@tenant.TenantFirstName</td>
+                <td>@tenant.TenantLastName</td>
+                <td>@tenant.Email</td>
+                <td>@tenant.Phone</td>
+                <td>
+                    <!-- Navigate to Tenant/EditTenant/id -->
+                    <a href="@Url.Action("EditTenant", "TenantView", new { id = tenant.TenantId })" class="btn btn-warning">
                         <i class="bi bi-pencil"></i> Edit
                     </a>
                     <!-- Delete Button opens the modal with a specific ID -->
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@landlord.LandlordId">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@tenant.TenantId">
                         <i class="bi bi-trash"></i> Delete
                     </button>
 
-                    <!-- Delete Confirmation Modal (one per landlord) -->
-                    <div class="modal fade" id="deleteModal-@landlord.LandlordId" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <!-- Delete Confirmation Modal (one per tenant) -->
+                    <div class="modal fade" id="deleteModal-@tenant.TenantId" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -42,12 +43,12 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure you want to delete <strong>@landlord.LandlordFirstName @landlord.LandlordLastName</strong>?
+                                    Are you sure you want to delete <strong>@tenant.TenantFirstName @tenant.TenantLastName</strong>?
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <!-- Delete Form -->
-                                    <form method="post" asp-action="DeleteLandlord" asp-route-id="@landlord.LandlordId">
+                                    <form method="post" asp-action="DeleteTenant" asp-route-id="@tenant.TenantId">
                                         <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
                                 </div>
@@ -60,7 +61,4 @@
     </tbody>
 </table>
 
-
-
-
-<a href="@Url.Action("AddLandlord", "LandlordView")" class="btn btn-primary">Add Landlord</a>
+<a href="@Url.Action("AddTenant", "TenantView")" class="btn btn-primary">Add Tenant</a>

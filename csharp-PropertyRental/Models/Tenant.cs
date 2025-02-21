@@ -32,6 +32,12 @@ namespace csharp_PropertyRental.Models
         public int TenantId { get; set; }
         public string? TenantFirstName { get; set; }
         public string? TenantLastName { get; set; }
+        
+        [Required(ErrorMessage = "Email is required.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Phone number is required.")]
+        public string? Phone { get; set; }
         public string? RentedPropertyName { get; set; }
 
     }

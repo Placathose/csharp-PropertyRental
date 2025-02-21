@@ -82,5 +82,58 @@ namespace csharp_PropertyRental.Controllers
             // Redirect to the list view after deletion
             return RedirectToAction(nameof(Index));  // Redirect to the Index view
         }
+
+        // Updating
+        // GET: LandlordView/EditLandlord/{id}
+        public async Task<IActionResult> EditLandlord(int id)
+        {
+            var landlord = await _context.Landlords.FindAsync(id);
+            if (landlord == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new LandlordViewModel
+            {
+                LandlordId = landlord.LandlordId,
+                LandlordFirstName = landlord.FirstName,
+                LandlordLastName = landlord.LastName,
+                Email = landlord.Email,
+                Phone = landlord.Phone
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: LandlordView/EditLandlord
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditLandlord(LandlordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var landlord = await _context.Landlords.FindAsync(model.LandlordId);
+            if (landlord == null)
+            {
+                return NotFound();
+            }
+
+            // Update landlord properties
+            landlord.FirstName = model.LandlordFirstName;
+            landlord.LastName = model.LandlordLastName;
+            landlord.Email = model.Email;
+            landlord.Phone = model.Phone;
+            landlord.UpdatedAt = DateTime.UtcNow;
+
+            // Save changes
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

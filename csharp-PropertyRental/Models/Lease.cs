@@ -34,6 +34,7 @@ namespace csharp_PropertyRental.Models
     {
         public int LeaseId { get; set; }
         public int PropertyId { get; set; } 
+        public int LandlordId { get; set; } 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string? Terms { get; set; }

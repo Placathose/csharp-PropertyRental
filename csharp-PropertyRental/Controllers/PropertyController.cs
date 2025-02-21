@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using csharp_PropertyRental.Models;
 using csharp_PropertyRental.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace csharp_PropertyRental.Controllers
 {
@@ -15,84 +16,201 @@ namespace csharp_PropertyRental.Controllers
             _context = context;
         }
 
-        // POST: Add a property
-        [HttpPost("AddProperty")] // Route: /Property/AddProperty
-        public IActionResult AddProperty([FromBody] Property property)
+        // <summary>
+        // Add a PropertyDto
+        // </summary>
+        // <return>
+        // 200 OK
+        // {PropertyDto}
+        // </return>
+        // <example>
+        // POST: Property/AddProperty -> {PropertyDto}
+        // </example>
+
+        [HttpPost("AddProperty")]
+        public async Task<ActionResult<PropertyDto>> AddProperty([FromBody] PropertyDto propertyDto)
         {
-            if (!ModelState.IsValid) // Validate model
+            if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Return 400 if invalid
+                return BadRequest(ModelState);
             }
 
-            _context.Properties.Add(property); // Add property
-            _context.SaveChanges(); // Save changes
+            var property = new Property
+            {
+                LandlordId = propertyDto.LandlordId,
+                Title = propertyDto.Title,
+                Description = propertyDto.Description,
+                Price = propertyDto.Price,
+                Location = propertyDto.Location,
+                PropertyType = propertyDto.PropertyType,
+                Bedrooms = propertyDto.Bedrooms,
+                Bathrooms = propertyDto.Bathrooms,
+                SquareFootage = propertyDto.SquareFootage,
+                IsAvailable = propertyDto.IsAvailable,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
-            return Ok(property); // Return 200 with property
+            _context.Properties.Add(property);
+            await _context.SaveChangesAsync();
+
+            var createdPropertyDto = new PropertyDto
+            {
+                PropertyId = property.PropertyId,
+                LandlordId = property.LandlordId,
+                Title = property.Title,
+                Description = property.Description,
+                Price = property.Price,
+                Location = property.Location,
+                PropertyType = property.PropertyType,
+                Bedrooms = property.Bedrooms,
+                Bathrooms = property.Bathrooms,
+                SquareFootage = property.SquareFootage,
+                IsAvailable = property.IsAvailable
+            };
+
+            return Ok(createdPropertyDto);
         }
 
-        // GET: Retrieve all properties
-        [HttpGet("GetAllProperties")] // Route: /Property/GetAllProperties
-        public IActionResult GetAllProperties()
+        // <summary>
+        // Returns a list of properties represented by the PropertyDto
+        // </summary>
+        // <return>
+        // 200 OK
+        // [{PropertyDto}, {PropertyDto},..]
+        // </return>
+        // <example>
+        // GET: Property/GetAllProperties -> [{PropertyDto, PropertyDto},...]
+        // </example>
+
+        [HttpGet("GetAllProperties")]
+        public async Task<ActionResult<List<PropertyDto>>> GetAllProperties()
         {
-            var properties = _context.Properties.ToList(); // Get properties
-            return Ok(properties); // Return 200 with data
+            var properties = await _context.Properties.ToListAsync();
+            return Ok(properties);
         }
 
-        // GET: Retrieve property by ID
-        [HttpGet("GetProperty/{id}")] // Route: /Property/GetProperty/{id}
-        public IActionResult GetProperty(int id)
+        // <summary>
+        // Returns a single property represented by the PropertyDto
+        // </summary>
+        // <param name="id">The property id</param>
+        // <return>
+        // 200 OK
+        // {PropertyDto}
+        // or 404 Not found
+        // </return>
+        // <example>
+        // GET: Property/GetProperty/{id} -> {PropertyDto}
+        // </example>
+
+        [HttpGet("GetProperty/{id}")]
+        public async Task<ActionResult<PropertyDto>> GetProperty(int id)
         {
-            var property = _context.Properties.Find(id); // Find property
+            var property = await _context.Properties.FindAsync(id);
             if (property == null)
             {
-                return NotFound(); // Return 404 if not found
+                return NotFound();
             }
 
-            return Ok(property); // Return 200 with property
+            var propertyDto = new PropertyDto
+            {
+                PropertyId = property.PropertyId,
+                LandlordId = property.LandlordId,
+                Title = property.Title,
+                Description = property.Description,
+                Price = property.Price,
+                Location = property.Location,
+                PropertyType = property.PropertyType,
+                Bedrooms = property.Bedrooms,
+                Bathrooms = property.Bathrooms,
+                SquareFootage = property.SquareFootage,
+                IsAvailable = property.IsAvailable
+            };
+
+            return Ok(propertyDto);
         }
 
-        // PUT: Update a property
-        [HttpPut("UpdateProperty/{id}")] // Route: /Property/UpdateProperty/{id}
-        public IActionResult UpdateProperty(int id, [FromBody] Property updatedProperty)
+        // <summary>
+        // DELETE a PropertyDto by ID
+        // </summary>
+        // <param name="id">The property id</param>
+        // <return>
+        // 204 No Content
+        // or 404 Not found
+        // </return>
+        // <example>
+        // DELETE: Property/DeleteProperty/{id}
+        // </example>
+
+        [HttpDelete("DeleteProperty/{id}")]
+        public async Task<ActionResult> DeleteProperty(int id)
         {
-            var property = _context.Properties.Find(id); // Find property
+            var property = await _context.Properties.FindAsync(id);
             if (property == null)
             {
-                return NotFound(); // Return 404 if not found
+                return NotFound();
             }
 
-            // Update property fields
-            property.Title = updatedProperty.Title;
-            property.Description = updatedProperty.Description;
-            property.Price = updatedProperty.Price;
-            property.Location = updatedProperty.Location;
-            property.PropertyType = updatedProperty.PropertyType;
-            property.Bedrooms = updatedProperty.Bedrooms;
-            property.Bathrooms = updatedProperty.Bathrooms;
-            property.SquareFootage = updatedProperty.SquareFootage;
-            property.IsAvailable = updatedProperty.IsAvailable;
+            _context.Properties.Remove(property);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // <summary>
+        // Update a PropertyDto by ID
+        // </summary>
+        // <param name="id">The property id</param>
+        // <param name="updatedPropertyDto">The updated property data</param>
+        // <return>
+        // 200 OK
+        // {PropertyDto}
+        // or 404 Not found
+        // </return>
+        // <example>
+        // PUT: Property/UpdateProperty/{id} -> {PropertyDto}
+        // </example>
+
+        [HttpPut("UpdateProperty/{id}")]
+        public async Task<ActionResult<PropertyDto>> UpdateProperty(int id, [FromBody] PropertyDto updatedPropertyDto)
+        {
+            var property = await _context.Properties.FindAsync(id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            property.LandlordId = updatedPropertyDto.LandlordId;
+            property.Title = updatedPropertyDto.Title;
+            property.Description = updatedPropertyDto.Description;
+            property.Price = updatedPropertyDto.Price;
+            property.Location = updatedPropertyDto.Location;
+            property.PropertyType = updatedPropertyDto.PropertyType;
+            property.Bedrooms = updatedPropertyDto.Bedrooms;
+            property.Bathrooms = updatedPropertyDto.Bathrooms;
+            property.SquareFootage = updatedPropertyDto.SquareFootage;
+            property.IsAvailable = updatedPropertyDto.IsAvailable;
             property.UpdatedAt = DateTime.UtcNow;
 
-            _context.Properties.Update(property); // Update property
-            _context.SaveChanges(); // Save changes
+            _context.Properties.Update(property);
+            await _context.SaveChangesAsync();
 
-            return Ok(property); // Return 200 with updated property
-        }
-
-        // DELETE: Delete property by ID
-        [HttpDelete("DeleteProperty/{id}")] // Route: /Property/DeleteProperty/{id}
-        public IActionResult DeleteProperty(int id)
-        {
-            var property = _context.Properties.Find(id); // Find property
-            if (property == null)
+            var propertyDto = new PropertyDto
             {
-                return NotFound(); // Return 404 if not found
-            }
+                PropertyId = property.PropertyId,
+                LandlordId = property.LandlordId,
+                Title = property.Title,
+                Description = property.Description,
+                Price = property.Price,
+                Location = property.Location,
+                PropertyType = property.PropertyType,
+                Bedrooms = property.Bedrooms,
+                Bathrooms = property.Bathrooms,
+                SquareFootage = property.SquareFootage,
+                IsAvailable = property.IsAvailable
+            };
 
-            _context.Properties.Remove(property); // Remove property
-            _context.SaveChanges(); // Save changes
-
-            return NoContent(); // Return 204 (no content)
+            return Ok(propertyDto);
         }
     }
 }

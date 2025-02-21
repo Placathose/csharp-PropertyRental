@@ -1,0 +1,34 @@
+@model csharp_PropertyRental.Models.TenantViewModel
+
+@{
+    ViewData["Title"] = "Edit Tenant";
+}
+
+<h2>Edit Tenant</h2>
+
+<form asp-action="EditTenant" method="post">
+    <input type="hidden" asp-for="TenantId" />
+
+    <div class="mb-3">
+        <label asp-for="TenantFirstName" class="form-label">First Name</label>
+        <input asp-for="TenantFirstName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TenantLastName" class="form-label">Last Name</label>
+        <input asp-for="TenantLastName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" type="email" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label">Phone</label>
+        <input asp-for="Phone" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+    <a href="@Url.Action("Index", "TenantView")" class="btn btn-secondary">Cancel</a>
+</form>
