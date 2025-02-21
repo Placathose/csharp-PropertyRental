@@ -23,9 +23,41 @@
                 <td>@landlord.LandlordLastName</td>
                 <td>@landlord.Email</td>
                 <td>@landlord.Phone</td>
+                 <td>
+                    <!-- Delete Button opens the modal with a specific ID -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@landlord.LandlordId">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+
+                    <!-- Delete Confirmation Modal (one per landlord) -->
+                    <div class="modal fade" id="deleteModal-@landlord.LandlordId" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm Deletion</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete <strong>@landlord.LandlordFirstName @landlord.LandlordLastName</strong>?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <!-- Delete Form -->
+                                    <form method="post" asp-action="DeleteLandlord" asp-route-id="@landlord.LandlordId">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+
 
 <a href="@Url.Action("AddLandlord", "LandlordView")" class="btn btn-primary">Add Landlord</a>

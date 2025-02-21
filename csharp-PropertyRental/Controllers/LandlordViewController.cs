@@ -33,6 +33,12 @@ namespace csharp_PropertyRental.Controllers
             return View(landlords);
         }
 
+        // GET: LandlordView/AddLandlord (Shows the form)
+        public IActionResult AddLandlord()
+        {
+            return View(new LandlordViewModel());
+        }
+
         // POST: LandlordView/AddLandlord
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -56,6 +62,25 @@ namespace csharp_PropertyRental.Controllers
                 return RedirectToAction("Index", "LandlordView");  // Redirect to the list of landlords
             }
             return View(landlordViewModel); // Return back to the form if validation fails
+        }
+
+        // POST: LandlordView/DeleteLandlord/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]  // Prevent CSRF attacks
+        public async Task<IActionResult> DeleteLandlord(int id)
+        {
+            // Find the landlord by ID
+            var landlord = await _context.Landlords.FindAsync(id);
+            if (landlord == null)
+            {
+                return NotFound();  // If not found, return 404
+            }
+
+            _context.Landlords.Remove(landlord);  // Remove from the database
+            await _context.SaveChangesAsync();  // Save changes
+
+            // Redirect to the list view after deletion
+            return RedirectToAction(nameof(Index));  // Redirect to the Index view
         }
     }
 }
