@@ -1,0 +1,72 @@
+@model List<csharp_PropertyRental.Models.PropertyViewModel>
+
+@{
+    ViewData["Title"] = "Properties List";
+}
+
+<h2>Properties</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Bedrooms</th>
+            <th>Bathrooms</th>
+            <th>Square Footage</th>
+            <th>Available</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var property in Model)
+        {
+            <tr>
+                <td>@property.Title</td>
+                <td>@property.Location</td>
+                <td>@property.Price.ToString("C")</td>
+                <td>@property.PropertyType</td>
+                <td>@property.Bedrooms</td>
+                <td>@property.Bathrooms</td>
+                <td>@property.SquareFootage</td>
+                <td>@(property.IsAvailable ? "Yes" : "No")</td>
+                <td>
+                    <!-- Navigate to Property/EditProperty/id -->
+                    <a href="@Url.Action("EditProperty", "PropertyView", new { id = property.PropertyId })" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <!-- Delete Button opens the modal with a specific ID -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@property.PropertyId">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+
+                    <!-- Delete Confirmation Modal (one per property) -->
+                    <div class="modal fade" id="deleteModal-@property.PropertyId" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm Deletion</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete <strong>@property.Title</strong>?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <!-- Delete Form -->
+                                    <form method="post" asp-action="DeleteProperty" asp-route-id="@property.PropertyId">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("AddProperty", "PropertyView")" class="btn btn-primary">Add Property</a>

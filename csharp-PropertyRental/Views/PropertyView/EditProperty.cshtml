@@ -1,0 +1,64 @@
+@model csharp_PropertyRental.Models.PropertyViewModel
+
+@{
+    ViewData["Title"] = "Edit Property";
+}
+
+<h2>Edit Property</h2>
+
+<form asp-action="EditProperty" method="post">
+    <input type="hidden" asp-for="PropertyId" />
+
+    <div class="mb-3">
+        <label asp-for="LandlordId" class="form-label">Landlord ID</label>
+        <input asp-for="LandlordId" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">Price</label>
+        <input asp-for="Price" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Location" class="form-label">Location</label>
+        <input asp-for="Location" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PropertyType" class="form-label">Property Type</label>
+        <input asp-for="PropertyType" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Bedrooms" class="form-label">Bedrooms</label>
+        <input asp-for="Bedrooms" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Bathrooms" class="form-label">Bathrooms</label>
+        <input asp-for="Bathrooms" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SquareFootage" class="form-label">Square Footage</label>
+        <input asp-for="SquareFootage" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IsAvailable" class="form-label">Is Available</label>
+        <input asp-for="IsAvailable" class="form-check-input" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Update</button>
+    <a href="@Url.Action("Index", "PropertyView")" class="btn btn-secondary">Cancel</a>
+</form>
