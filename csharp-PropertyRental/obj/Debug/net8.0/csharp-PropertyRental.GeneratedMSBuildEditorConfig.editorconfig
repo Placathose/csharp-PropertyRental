@@ -30,6 +30,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/bruce/Desktop/Humber-single-repo/csharp-PropertyRental/csharp-PropertyRental/Views/LandlordView/AddLandlord.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFuZGxvcmRWaWV3L0FkZExhbmRsb3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/bruce/Desktop/Humber-single-repo/csharp-PropertyRental/csharp-PropertyRental/Views/LandlordView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTGFuZGxvcmRWaWV3L0luZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/bruce/Desktop/Humber-single-repo/csharp-PropertyRental/csharp-PropertyRental/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

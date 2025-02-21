@@ -1,0 +1,31 @@
+@model List<csharp_PropertyRental.Models.LandlordViewModel>
+
+@{
+    ViewData["Title"] = "Landlords List";
+}
+
+<h2>Landlords</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var landlord in Model)
+        {
+            <tr>
+                <td>@landlord.LandlordFirstName</td>
+                <td>@landlord.LandlordLastName</td>
+                <td>@landlord.Email</td>
+                <td>@landlord.Phone</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("AddLandlord", "LandlordView")" class="btn btn-primary">Add Landlord</a>

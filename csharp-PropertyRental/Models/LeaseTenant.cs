@@ -16,4 +16,10 @@ namespace csharp_PropertyRental.Models
         public Lease? Lease { get; set; }
         public Tenant? Tenant { get; set; }
     }
+    public class LeaseTenantDto 
+    {
+        public int LeaseTenantId { get; set; }
+        public int LeaseId { get; set; } 
+        public int TenantId { get; set; } 
+    }
 }

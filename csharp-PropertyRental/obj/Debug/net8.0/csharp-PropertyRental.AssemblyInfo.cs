@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("csharp-PropertyRental")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a5fcd652cfeffe1a56dc044776bcad2c864e3846")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e07190eae6de9853a66cadc6a8512899ff6e896")]
 [assembly: System.Reflection.AssemblyProductAttribute("csharp-PropertyRental")]
 [assembly: System.Reflection.AssemblyTitleAttribute("csharp-PropertyRental")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

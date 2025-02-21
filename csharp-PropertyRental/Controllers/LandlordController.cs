@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using csharp_PropertyRental.Models;
 using csharp_PropertyRental.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace csharp_PropertyRental.Controllers
 {
@@ -15,70 +16,144 @@ namespace csharp_PropertyRental.Controllers
             _context = context;
         }
 
+         // <summary>
+        // Add a LandlordDto
+        // </summary>
+        // <return>
+        // 200 OK
+        // [{LandlordDto}, {LandlordDto},..]
+        // </return>
+        // <example>
+        // GET: LandlordDto/GetAllLandlords -> [{LandlordDto, LandlordDto},...]
+        // </example>
+
         // POST route to handle adding a landlord
-        [HttpPost("AddLandlord")] // Route: /Landlord/AddLandlord
-        public IActionResult AddLandlord([FromBody] Landlord landlord)
+        // Route: /Landlord/AddLandlord
+        // Notes: Task<ActionResult<List<LandlordDto>>> accept an array/list
+        // Notes: Task<ActionResult<LandlordDto>> accept one landlord
+
+        [HttpPost("AddLandlord")] 
+        public async Task<ActionResult<List<LandlordDto>>> AddLandlord([FromBody] LandlordDto landlordDto)
         {
-            if (!ModelState.IsValid) // Validate the model
+            // Check BodyData against the model (LandlordDto)
+            if (!ModelState.IsValid) 
             {
                 return BadRequest(ModelState); // Return 400 if validation fails
             }
 
-            _context.Landlords.Add(landlord); // Add the landlord to the database
-            _context.SaveChanges(); // Save changes
+            var landlord = new Landlord
+            {
+                FirstName = landlordDto.LandlordFirstName,
+                LastName = landlordDto.LandlordLastName,
+                Email = landlordDto.Email,
+                Phone = landlordDto.Phone,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
-            return Ok(landlord); // Return 200 with the created landlord
+            _context.Landlords.Add(landlord); 
+            await _context.SaveChangesAsync(); 
+
+            // return the Dto to Control data exposure from API
+            var createdLandlordDto = new LandlordDto
+            {
+                LandlordId = landlord.LandlordId,
+                LandlordFirstName = landlord.FirstName,
+                LandlordLastName = landlord.LastName,
+                Email = landlord.Email,
+                Phone = landlord.Phone
+            };
+
+            return Ok(landlord); 
         }
 
+
+        // <summary>
+        // Returns a list of landlords represented by the LandlordDto
+        // </summary>
+        // <return>
+        // 200 OK
+        // [{LandlordDto}, {LandlordDto},..]
+        // </return>
+        // <example>
+        // GET: LandlordDto/GetAllLandlords -> [{LandlordDto, LandlordDto},...]
+        // </example>
         // GET route to retrieve all landlords
-        [HttpGet("GetAllLandlords")] 
-        public IActionResult GetAllLandlords()
+
+         [HttpGet("GetAllLandlords")] 
+        public async Task<ActionResult<List<LandlordDto>>> GetAllLandlords()
         {
             // Retrieve all landlords from the database
-            var landlords = _context.Landlords.ToList(); 
+            var landlords = await _context.Landlords.ToListAsync(); 
             return Ok(landlords); 
         }
 
-        // DELETE a Landlord by ID
-        [HttpDelete("DeleteLandlord/{id}")]
-        public IActionResult DeleteALandlord(int id)
+         // <summary>
+        // Returns a single landlord represented by the LandlordDto
+        // </summary>
+        //  <param name="id">The landlord id</param>
+        // <return>
+        // 200 OK
+        //  {LandlordDto}
+        // or 404 Not found
+        // </return>
+        // <example>
+        // GET: LandlordDto/FindLandlord/{id} -> [{LandlordDto, LandlordDto},...]
+        // </example>
+
+        [HttpGet("GetLandlord/{id}")]
+        public async Task<ActionResult<LandlordDto>> GetLandlord(int id)
         {
-            var landlord = _context.Landlords.Find(id);
+            var landlord = await _context.Landlords.FindAsync(id);
+            if(landlord == null)
+            {
+                return NotFound();
+            } else 
+            {
+                return Ok(landlord);
+            }
+        }
+
+       // DELETE a LandlordDto by ID
+        [HttpDelete("DeleteLandlord/{id}")]
+        public async Task<ActionResult> DeleteALandlord(int id)
+        {
+            var landlord = await _context.Landlords.FindAsync(id);
             if(landlord == null)
             {
                 return NotFound();
             }
 
             _context.Landlords.Remove(landlord);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
+
         [HttpPut("UpdateLandlord/{id}")]
-        public IActionResult UpdateLandlord(int id, [FromBody] Landlord updatedLandlord)
+        public async Task<ActionResult<LandlordDto>> UpdateLandlord(int id, [FromBody] LandlordDto updatedLandlordDto)
         {
-            var landlord = _context.Landlords.Find(id);
+            var landlord = await _context.Landlords.FindAsync(id);
             if(landlord == null)
             {
                 return NotFound();
             }
 
             // Update landlord fields
-            landlord.FirstName = updatedLandlord.FirstName;
-            landlord.LastName = updatedLandlord.LastName;
-            landlord.Email = updatedLandlord.Email;
-            landlord.Phone = updatedLandlord.Phone;
+            landlord.FirstName = updatedLandlordDto.LandlordFirstName;
+            landlord.LastName = updatedLandlordDto.LandlordLastName;
+            landlord.Email = updatedLandlordDto.Email;
+            landlord.Phone = updatedLandlordDto.Phone;
             landlord.UpdatedAt = DateTime.UtcNow;
 
             _context.Landlords.Update(landlord);
 
             // save it in db
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // Return 200 with updated landlord JSON
             return Ok(landlord);
-
         }
     }
 }
