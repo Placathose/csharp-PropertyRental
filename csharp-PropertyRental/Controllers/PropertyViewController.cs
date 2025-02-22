@@ -50,49 +50,65 @@ namespace csharp_PropertyRental.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProperty(PropertyViewModel propertyViewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var property = new Property
+                // Log validation errors
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    LandlordId = propertyViewModel.LandlordId,
-                    Title = propertyViewModel.Title,
-                    Description = propertyViewModel.Description,
-                    Price = propertyViewModel.Price,
-                    Location = propertyViewModel.Location,
-                    PropertyType = propertyViewModel.PropertyType,
-                    Bedrooms = propertyViewModel.Bedrooms,
-                    Bathrooms = propertyViewModel.Bathrooms,
-                    SquareFootage = propertyViewModel.SquareFootage,
-                    IsAvailable = propertyViewModel.IsAvailable,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                };
+                    Console.WriteLine($"Validation Error: {error.ErrorMessage}");
+                }
 
-                _context.Properties.Add(property);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Index", "PropertyView");  // Redirect to the list of properties
+                // Return to the form with validation errors
+                return View(propertyViewModel);
             }
-            return View(propertyViewModel); // Return back to the form if validation fails
+
+            // Check if the LandlordId exists in the Landlords table
+            var landlordExists = await _context.Landlords.AnyAsync(l => l.LandlordId == propertyViewModel.LandlordId);
+            if (!landlordExists)
+            {
+                ModelState.AddModelError("LandlordId", "The specified Landlord does not exist.");
+                return View(propertyViewModel);
+            }
+
+            var property = new Property
+            {
+                LandlordId = propertyViewModel.LandlordId,
+                Title = propertyViewModel.Title,
+                Description = propertyViewModel.Description,
+                Price = propertyViewModel.Price,
+                Location = propertyViewModel.Location,
+                PropertyType = propertyViewModel.PropertyType,
+                Bedrooms = propertyViewModel.Bedrooms,
+                Bathrooms = propertyViewModel.Bathrooms,
+                SquareFootage = propertyViewModel.SquareFootage,
+                IsAvailable = propertyViewModel.IsAvailable,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Properties.Add(property);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "PropertyView");
         }
 
         // POST: PropertyView/DeleteProperty/{id}
         [HttpPost]
-        [ValidateAntiForgeryToken]  // Prevent CSRF attacks
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProperty(int id)
         {
             // Find the property by ID
             var property = await _context.Properties.FindAsync(id);
             if (property == null)
             {
-                return NotFound();  // If not found, return 404
+                return NotFound();  
             }
 
-            _context.Properties.Remove(property);  // Remove from the database
-            await _context.SaveChangesAsync();  // Save changes
+            _context.Properties.Remove(property);  
+            await _context.SaveChangesAsync();  
 
             // Redirect to the list view after deletion
-            return RedirectToAction(nameof(Index));  // Redirect to the Index view
+            return RedirectToAction(nameof(Index));  
         }
 
         // Updating

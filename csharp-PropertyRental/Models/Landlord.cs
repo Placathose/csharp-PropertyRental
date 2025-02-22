@@ -25,7 +25,7 @@ namespace csharp_PropertyRental.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; // Last updated
 
         // Navigation Properties
-        public ICollection<Property>? Properties { get; set; } // One-to-Many: Landlord -> Properties
+        public ICollection<Lease> Leases { get; set; } = new List<Lease>();
 
     }
 

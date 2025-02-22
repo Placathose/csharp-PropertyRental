@@ -54,8 +54,10 @@
     </div>
 
     <div class="form-group">
-        <label for="IsAvailable">Is Available</label>
-        <input type="checkbox" class="form-check-input" id="IsAvailable" name="IsAvailable" checked="@Model.IsAvailable" />
+        <label asp-for="IsAvailable">Is Available</label>
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" value="true" />
+        <input type="hidden" asp-for="IsAvailable" value="false" />
+        <span asp-validation-for="IsAvailable" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Add Property</button>

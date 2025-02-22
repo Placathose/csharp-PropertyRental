@@ -1,0 +1,42 @@
+@model List<csharp_PropertyRental.Models.LeaseViewModel>
+
+@{
+    ViewData["Title"] = "Leases List";
+}
+
+<h2>Leases</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Landlord</th>
+            <th>Tenants</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Terms</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lease in Model)
+        {
+            <tr>
+                <td>@lease.PropertyId</td>
+                <td>@lease.LandlordId</td>
+                <td>@string.Join(", ", lease.TenantIds)</td>
+                <td>@lease.StartDate.ToShortDateString()</td>
+                <td>@lease.EndDate.ToShortDateString()</td>
+                <td>@lease.Terms</td>
+                <td>
+                    <a href="@Url.Action("EditLease", "LeaseView", new { id = lease.LeaseId })" class="btn btn-warning">Edit</a>
+                    <form method="post" asp-action="DeleteLease" asp-route-id="@lease.LeaseId" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("AddLease", "LeaseView")" class="btn btn-primary">Add Lease</a>

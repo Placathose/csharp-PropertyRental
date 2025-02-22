@@ -5,30 +5,32 @@ using System.ComponentModel.DataAnnotations;
 namespace csharp_PropertyRental.Models
 {
     public class Lease
-    {
-        [Key]
-        public int LeaseId { get; set; } 
+{
+    [Key]
+    public int LeaseId { get; set; }
 
-        [Required]
-        public int PropertyId { get; set; } 
+    [Required]
+    public int PropertyId { get; set; }
 
-        [Required]
-        public int LandlordId { get; set; } 
+    [Required]
+    public int LandlordId { get; set; }
 
-        [Required]
-        public DateTime StartDate { get; set; } 
+    [Required]
+    public DateTime StartDate { get; set; }
 
-        [Required]
-        public DateTime EndDate { get; set; } 
+    [Required]
+    public DateTime EndDate { get; set; }
 
-        public string? Terms { get; set; } 
+    public string? Terms { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Date created
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow; // Last updated
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation Properties
-        public ICollection<Tenant>? Tenants { get; set; } // One-to-Many: Landlord -> 
-    }
+    // Navigation Properties
+    public Property? Property { get; set; } // Navigation to Property
+    public Landlord? Landlord { get; set; } // Navigation to Landlord
+    public ICollection<LeaseTenant> LeaseTenants { get; set; } = new List<LeaseTenant>(); // Many-to-Many with Tenant
+}
 
     public class LeaseDto
     {

@@ -54,9 +54,11 @@
         <input asp-for="SquareFootage" class="form-control" />
     </div>
 
-    <div class="mb-3">
+   <div class="mb-3">
         <label asp-for="IsAvailable" class="form-label">Is Available</label>
-        <input asp-for="IsAvailable" class="form-check-input" />
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" value="true" />
+        <input type="hidden" asp-for="IsAvailable" value="false" />
+        <span asp-validation-for="IsAvailable" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Update</button>

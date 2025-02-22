@@ -23,8 +23,8 @@ namespace csharp_PropertyRental.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         
-        // One-to-Many: tenant -> leaseTenants
-        public ICollection<LeaseTenant>? LeaseTenants { get; set; }
+        // Navigation Property
+        public ICollection<LeaseTenant> LeaseTenants { get; set; } = new List<LeaseTenant>();
     }
 
     public class TenantDto

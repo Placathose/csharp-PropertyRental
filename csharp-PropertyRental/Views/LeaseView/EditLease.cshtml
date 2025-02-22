@@ -1,0 +1,47 @@
+@model csharp_PropertyRental.Models.LeaseViewModel
+
+@{
+    ViewData["Title"] = "Edit Lease";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="LeaseId" />
+
+    <div class="form-group">
+        <label asp-for="PropertyId">Property</label>
+        <select asp-for="PropertyId" class="form-control" asp-items="@(new SelectList(ViewBag.Properties, "PropertyId", "Title"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LandlordId">Landlord</label>
+        <select asp-for="LandlordId" class="form-control" asp-items="@(new SelectList(ViewBag.Landlords, "LandlordId", "FirstName"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TenantIds">Tenants</label>
+        <select asp-for="TenantIds" class="form-control" multiple asp-items="@(new SelectList(ViewBag.Tenants, "TenantId", "FirstName"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate">Start Date</label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate">End Date</label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Terms">Terms</label>
+        <textarea asp-for="Terms" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Lease</button>
+</form>
+
+<a href="@Url.Action("Index", "LeaseView")" class="btn btn-secondary">Back to List</a>

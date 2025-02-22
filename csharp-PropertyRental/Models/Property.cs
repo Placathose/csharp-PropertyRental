@@ -39,7 +39,9 @@ namespace csharp_PropertyRental.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         public Landlord? Landlord { get; set; }
-        public ICollection<Lease>? Leases { get; set; }
+
+        // Navigation Property
+        public ICollection<Lease> Leases { get; set; } = new List<Lease>();
     }
 
    public class PropertyDto
