@@ -4,6 +4,7 @@ using csharp_PropertyRental.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace csharp_PropertyRental.Controllers
 {
@@ -42,8 +43,22 @@ namespace csharp_PropertyRental.Controllers
         // GET: PropertyView/AddProperty (Shows the form)
         public IActionResult AddProperty()
         {
+            // Fetch all landlords from the database
+            var landlords = _context.Landlords
+                .Select(l => new SelectListItem
+                {
+                    // Value for the dropdown (LandlordId)
+                    Value = l.LandlordId.ToString(), 
+                    Text = $"{l.FirstName} {l.LastName}" 
+                })
+                .ToList();
+
+            // Pass the landlords to the view using ViewBag
+            ViewBag.Landlords = landlords;
+
             return View(new PropertyViewModel());
         }
+
 
         // POST: PropertyView/AddProperty
         [HttpPost]
@@ -72,7 +87,7 @@ namespace csharp_PropertyRental.Controllers
 
             var property = new Property
             {
-                LandlordId = propertyViewModel.LandlordId,
+                LandlordId = propertyViewModel.LandlordId, //assign landlord here
                 Title = propertyViewModel.Title,
                 Description = propertyViewModel.Description,
                 Price = propertyViewModel.Price,

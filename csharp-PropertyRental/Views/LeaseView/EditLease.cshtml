@@ -12,18 +12,31 @@
     <input type="hidden" asp-for="LeaseId" />
 
     <div class="form-group">
-        <label asp-for="PropertyId">Property</label>
-        <select asp-for="PropertyId" class="form-control" asp-items="@(new SelectList(ViewBag.Properties, "PropertyId", "Title"))"></select>
+        <label asp-for="LandlordId">Landlord</label>
+        <select asp-for="LandlordId" class="form-control" id="landlordDropdown">
+            <option value="">-- Select Landlord --</option>
+            @foreach (var landlord in ViewBag.Landlords)
+            {
+                <option value="@landlord.Value">@landlord.Text</option>
+            }
+        </select>
     </div>
 
     <div class="form-group">
-        <label asp-for="LandlordId">Landlord</label>
-        <select asp-for="LandlordId" class="form-control" asp-items="@(new SelectList(ViewBag.Landlords, "LandlordId", "FirstName"))"></select>
+        <label asp-for="PropertyId">Property</label>
+        <select asp-for="PropertyId" class="form-control" id="propertyDropdown">
+            <option value="">-- Select Property --</option>
+        </select>
     </div>
 
     <div class="form-group">
         <label asp-for="TenantIds">Tenants</label>
-        <select asp-for="TenantIds" class="form-control" multiple asp-items="@(new SelectList(ViewBag.Tenants, "TenantId", "FirstName"))"></select>
+        <select asp-for="TenantIds" class="form-control" multiple>
+            @foreach (var tenant in ViewBag.Tenants)
+            {
+                <option value="@tenant.Value">@tenant.Text</option>
+            }
+        </select>
     </div>
 
     <div class="form-group">
@@ -45,3 +58,28 @@
 </form>
 
 <a href="@Url.Action("Index", "LeaseView")" class="btn btn-secondary">Back to List</a>
+
+@section Scripts {
+    <script>
+        document.getElementById("landlordDropdown").addEventListener("change", function () {
+            var landlordId = this.value;
+            var propertyDropdown = document.getElementById("propertyDropdown");
+
+            // Clear existing options
+            propertyDropdown.innerHTML = '<option value="">-- Select Property --</option>';
+
+            if (landlordId) {
+                fetch(`/LeaseView/GetPropertiesByLandlord?landlordId=${landlordId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(function (property) {
+                            var option = document.createElement("option");
+                            option.value = property.value;
+                            option.text = property.text;
+                            propertyDropdown.appendChild(option);
+                        });
+                    });
+            }
+        });
+    </script>
+}

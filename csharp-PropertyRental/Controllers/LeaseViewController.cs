@@ -4,6 +4,7 @@ using csharp_PropertyRental.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace csharp_PropertyRental.Controllers
 {
@@ -19,11 +20,12 @@ namespace csharp_PropertyRental.Controllers
         // GET: LeaseView/Index
         public async Task<IActionResult> Index()
         {
-            // Fetch all leases with related data (Property, Landlord, Tenants)
+            // Fetch leases with related data
             var leases = await _context.Leases
                 .Include(l => l.Property)
-                .Include(l => l.Landlord)
+                    .ThenInclude(p => p.Landlord) // Include Landlord for each Property
                 .Include(l => l.LeaseTenants)
+                    .ThenInclude(lt => lt.Tenant) // Include Tenants for each Lease
                 .Select(l => new LeaseViewModel
                 {
                     LeaseId = l.LeaseId,
@@ -36,16 +38,58 @@ namespace csharp_PropertyRental.Controllers
                 })
                 .ToListAsync();
 
+            // Fetch additional data for display
+            var propertyTitles = await _context.Properties
+                .ToDictionaryAsync(p => p.PropertyId, p => p.Title);
+
+            var landlordNames = await _context.Landlords
+                .ToDictionaryAsync(l => l.LandlordId, l => $"{l.FirstName} {l.LastName}");
+
+            var tenantNames = await _context.Tenants
+                .ToDictionaryAsync(t => t.TenantId, t => $"{t.FirstName} {t.LastName}");
+
+            // Pass additional data to the view using ViewBag
+            ViewBag.PropertyTitles = propertyTitles;
+            ViewBag.LandlordNames = landlordNames;
+            ViewBag.TenantNames = tenantNames;
+
             return View(leases);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPropertiesByLandlord(int landlordId)
+        {
+            var properties = await _context.Properties
+                .Where(p => p.LandlordId == landlordId)
+                .Select(p => new SelectListItem
+                {
+                    Value = p.PropertyId.ToString(),
+                    Text = p.Title
+                })
+                .ToListAsync();
+
+            return Json(properties);
         }
 
         // GET: LeaseView/AddLease
         public IActionResult AddLease()
         {
-            // Populate dropdowns for Property, Landlord, and Tenants
-            ViewBag.Properties = _context.Properties.ToList();
-            ViewBag.Landlords = _context.Landlords.ToList();
-            ViewBag.Tenants = _context.Tenants.ToList();
+            // Fetch all landlords and tenants
+            ViewBag.Landlords = _context.Landlords
+                .Select(l => new SelectListItem
+                {
+                    Value = l.LandlordId.ToString(),
+                    Text = $"{l.FirstName} {l.LastName}"
+                })
+                .ToList();
+
+            ViewBag.Tenants = _context.Tenants
+                .Select(t => new SelectListItem
+                {
+                    Value = t.TenantId.ToString(),
+                    Text = $"{t.FirstName} {t.LastName}"
+                })
+                .ToList();
 
             return View(new LeaseViewModel());
         }
@@ -109,9 +153,26 @@ namespace csharp_PropertyRental.Controllers
             }
 
             // Populate dropdowns
-            ViewBag.Properties = _context.Properties.ToList();
-            ViewBag.Landlords = _context.Landlords.ToList();
-            ViewBag.Tenants = _context.Tenants.ToList();
+            // ViewBag.Properties = _context.Properties.ToList();
+            // ViewBag.Landlords = _context.Landlords.ToList();
+            // ViewBag.Tenants = _context.Tenants.ToList();
+
+            // Fetch all landlords and tenants
+            ViewBag.Landlords = _context.Landlords
+                .Select(l => new SelectListItem
+                {
+                    Value = l.LandlordId.ToString(),
+                    Text = $"{l.FirstName} {l.LastName}"
+                })
+                .ToList();
+
+            ViewBag.Tenants = _context.Tenants
+                .Select(t => new SelectListItem
+                {
+                    Value = t.TenantId.ToString(),
+                    Text = $"{t.FirstName} {t.LastName}"
+                })
+                .ToList();
 
             // Map to LeaseViewModel
             var model = new LeaseViewModel

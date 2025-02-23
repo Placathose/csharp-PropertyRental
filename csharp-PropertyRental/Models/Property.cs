@@ -9,7 +9,7 @@ namespace csharp_PropertyRental.Models
         public int PropertyId { get; set; }
 
         [Required]
-        public int LandlordId { get; set; }
+        public int LandlordId { get; set; } // Foreign key 
 
         [Required]
         public string? Title { get; set; }
@@ -38,10 +38,11 @@ namespace csharp_PropertyRental.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        public Landlord? Landlord { get; set; }
-
         // Navigation Property
         public ICollection<Lease> Leases { get; set; } = new List<Lease>();
+
+        // Navigation Property for Landlord
+        public Landlord? Landlord { get; set; }
     }
 
    public class PropertyDto

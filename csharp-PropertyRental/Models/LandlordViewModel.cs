@@ -12,5 +12,8 @@ namespace csharp_PropertyRental.Models
         public string? LandlordLastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
+
+        // List of properties owned by the landlord
+        public List<PropertyViewModel> Properties { get; set; } = new List<PropertyViewModel>();
     }
 }

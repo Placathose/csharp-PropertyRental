@@ -20,13 +20,20 @@ namespace csharp_PropertyRental.Controllers
         public async Task<IActionResult> Index()
         {
             var landlords = await _context.Landlords
+                .Include(l => l.Properties) // include properties in the query
                 .Select(l => new LandlordViewModel
                 {
                     LandlordId = l.LandlordId,
                     LandlordFirstName = l.FirstName,
                     LandlordLastName = l.LastName,
                     Email = l.Email,
-                    Phone = l.Phone
+                    Phone = l.Phone,
+                    Properties = l.Properties.Select(p => new PropertyViewModel
+                    {
+                         PropertyId = p.PropertyId,
+                         Title = p.Title,
+                         IsAvailable = p.IsAvailable
+                    }).ToList()
                 })
                 .ToListAsync();
 
@@ -115,7 +122,10 @@ namespace csharp_PropertyRental.Controllers
                 return View(model);
             }
 
-            var landlord = await _context.Landlords.FindAsync(model.LandlordId);
+            var landlord = await _context.Landlords
+                .Include(l => l.Properties) // Include properties for editing
+                .FirstOrDefaultAsync(l => l.LandlordId == model.LandlordId);
+                
             if (landlord == null)
             {
                 return NotFound();

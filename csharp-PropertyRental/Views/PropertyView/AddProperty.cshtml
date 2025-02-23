@@ -8,9 +8,12 @@
 
 <form method="post">
     @Html.AntiForgeryToken()
-    <div class="form-group">
-        <label for="LandlordId">Landlord ID</label>
-        <input type="number" class="form-control" id="LandlordId" name="LandlordId" value="@Model.LandlordId" required />
+     <div class="form-group">
+        <label asp-for="LandlordId" class="control-label"></label>
+        <select asp-for="LandlordId" class="form-control" asp-items="ViewBag.Landlords">
+            <option value="">-- Select Landlord --</option>
+        </select>
+        <span asp-validation-for="LandlordId" class="text-danger"></span>
     </div>
 
     <div class="form-group">

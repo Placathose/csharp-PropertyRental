@@ -22,9 +22,11 @@
         @foreach (var lease in Model)
         {
             <tr>
-                <td>@lease.PropertyId</td>
-                <td>@lease.LandlordId</td>
-                <td>@string.Join(", ", lease.TenantIds)</td>
+                <td>@ViewBag.PropertyTitles[lease.PropertyId]</td>
+                <td>@ViewBag.LandlordNames[lease.LandlordId]</td>
+                <td>
+                    @string.Join(", ", lease.TenantIds.Select(t => ViewBag.TenantNames[t]))
+                </td>
                 <td>@lease.StartDate.ToShortDateString()</td>
                 <td>@lease.EndDate.ToShortDateString()</td>
                 <td>@lease.Terms</td>

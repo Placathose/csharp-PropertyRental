@@ -9,20 +9,39 @@
 <table class="table">
     <thead>
         <tr>
+
+            <th>ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>properties Owned</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var landlord in Model)
         {
             <tr>
+                <td>@landlord.LandlordId</td>
                 <td>@landlord.LandlordFirstName</td>
                 <td>@landlord.LandlordLastName</td>
                 <td>@landlord.Email</td>
                 <td>@landlord.Phone</td>
+                <td>
+                    @if (landlord.Properties.Any())
+                    {
+                        <ul>
+                            @foreach (var property in landlord.Properties)
+                            {
+                                <li>@property.Title - @property.Location</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No properties assigned.</span>
+                    }
+                </td>
                  <td>
                     <!-- navigate to Landlord/EditLandlord/id-->
                     <a href="@Url.Action("EditLandlord", "LandlordView", new { id = landlord.LandlordId })" class="btn btn-warning">
